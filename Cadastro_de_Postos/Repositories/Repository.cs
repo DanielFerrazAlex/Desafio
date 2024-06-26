@@ -14,66 +14,47 @@ namespace Cadastro_de_Postos.Repositories
         {
             _logger = logger;
         }
-        public async Task<List<PostosModel>> GetAllInformation()
+
+        public async Task InserirPostoVacinacao(PostosModel posto)
         {
             try
             {
                 using (SqlConnection conn = new(Env.GetConnectionDataBase()))
                 {
-                    var result = await conn.QueryAsync<PostosModel>(Script.GetAll);
-                    return result.ToList();
+                    if (posto.Vacinas[0].DataValidade <= DateTime.Now)
+                    {
+                        _logger.LogInformation("A data de validade da vacina deve ser no futuro.");
+                    }
+
+                    int countPosto = await conn.ExecuteScalarAsync<int>(Script.VerifyPosto, new { Nome_Posto = posto.NomePosto });
+
+                    if (countPosto > 0)
+                    {
+                        _logger.LogInformation("Não pode haver nome repetido de postos:");
+                    }
+
+                    int countLote = await conn.ExecuteScalarAsync<int>(Script.VerifyLote, new { Lote = posto.Vacinas[0].Lote });
+
+                    if (countLote > 0)
+                    {
+                        _logger.LogInformation("Não pode haver Lotes repetidos de vacina");
+                    }
+
+                    int postoId = conn.QueryAsync<int>(Script.CreatePosto, posto).Result.Single();
+
+                    if (posto.Vacinas != null && posto.Vacinas.Any())
+                    {
+                        foreach (var vacina in posto.Vacinas)
+                        {
+                            vacina.Id = postoId;
+                            await conn.ExecuteAsync(Script.CreateVacinas, vacina);
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Erro ao retornar lista com todas informações: {ex.Message}");
-                throw;
-            }
-        }
-
-        public async Task CreatePostos(PostosModel posto)
-        {
-            try
-            {
-                if (await VerifyPostoExistAsync(posto.NomePosto))
-                {
-                    _logger.LogInformation($"Já existe uma vacina com o lote '{posto.NomePosto}'.");
-                }
-
-                using (SqlConnection conn = new(Env.GetConnectionDataBase()))
-                {
-                    await conn.ExecuteAsync(Script.CreatePosto, posto);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Erro ao tentar criar Posto de Vacinação: {ex.Message}");
-                throw;
-            }
-        }
-
-        public async Task CreateVacinas(VacinasModel vacina)
-        {
-            try
-            {
-                if (await VerifyLoteExistAsync(vacina.Lote))
-                {
-                    _logger.LogInformation($"Já existe uma vacina com o lote: {vacina.Lote}.");
-                }
-
-                if (vacina.DataValidade <= DateTime.Now)
-                {
-                    _logger.LogInformation("A data de validade da vacina deve ser no futuro.");
-                }
-
-                using (SqlConnection conn = new(Env.GetConnectionDataBase()))
-                {
-                    await conn.ExecuteAsync(Script.CreateVacinas, vacina);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Erro ao tentar criar Vacinas: {ex.Message}");
+                _logger.LogError($"Erro ao criar posto e suas respectivas vacinas: {ex.Message}");
                 throw;
             }
         }
@@ -84,7 +65,7 @@ namespace Cadastro_de_Postos.Repositories
             {
                 using (SqlConnection conn = new(Env.GetConnectionDataBase()))
                 {
-                    var QtdVacinas = await conn.ExecuteScalarAsync<int>(Script.VerifyEstoque, new { Id = Id });
+                    var QtdVacinas = await conn.ExecuteScalarAsync<int>(Script.VerifyVacina, new { Id = Id });
 
                     if (QtdVacinas == 0)
                     {
@@ -101,24 +82,6 @@ namespace Cadastro_de_Postos.Repositories
             {
                 _logger.LogError($"Erro ao deletar posto de vacinação: {ex.Message}");
                 throw;
-            }
-        }
-
-        private async Task<bool> VerifyLoteExistAsync(int lote)
-        {
-            using (SqlConnection conn = new(Env.GetConnectionDataBase()))
-            {
-                var count = await conn.ExecuteScalarAsync<int>(Script.VerifyLote, new { Lote = lote });
-                return count > 0;
-            }
-        }
-
-        private async Task<bool> VerifyPostoExistAsync(string? posto)
-        {
-            using (SqlConnection conn = new(Env.GetConnectionDataBase()))
-            {
-                var count = await conn.ExecuteScalarAsync<int>(Script.VerifyPosto, new { Nome_Posto = posto });
-                return count > 0;
             }
         }
     }

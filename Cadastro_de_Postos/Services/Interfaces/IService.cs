@@ -4,8 +4,7 @@ namespace Cadastro_de_Postos.Services.Interfaces
 {
     public interface IService
     {
-        Task CreatePostos(PostosModel posto);
-        Task CreateVacinas(VacinasModel vacina);
+        Task InserirPostoVacinacao(PostosModel posto);
         Task<bool> DeletePostos(int Id);
     }
 }

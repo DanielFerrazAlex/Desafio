@@ -6,41 +6,22 @@ namespace Cadastro_de_Postos.Controllers
 {
     public class Controller : ControllerBase
     {
-        private readonly ILogger<Controller> _logger;
         private readonly IService _service;
         public Controller(ILogger<Controller> logger, IService service)
         {
-            _logger = logger;
             _service = service;
         }
         [HttpPost("[action]")]
-        public async Task<IActionResult> CreatePostos([FromBody] PostosModel posto)
+        public async Task<IActionResult> InserirPostoVacinacao([FromBody] PostosModel posto)
         {
             try
             {
-                await _service.CreatePostos(posto);
+                await _service.InserirPostoVacinacao(posto);
                 return NoContent();
             }
             catch (Exception ex)
             {
                 BadRequest(ex.Message);
-                _logger.LogError("Algo de errado aconteceu: ");
-                throw;
-            }
-        }
-
-        [HttpPost("[action]")]
-        public async Task<IActionResult> CreateVacina([FromBody] VacinasModel vacina)
-        {
-            try
-            {
-                await _service.CreateVacinas(vacina);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                BadRequest(ex.Message);
-                _logger.LogError("Algo de errado aconteceu: ");
                 throw;
             }
         }
@@ -56,7 +37,6 @@ namespace Cadastro_de_Postos.Controllers
             catch (Exception ex)
             {
                 BadRequest(ex.Message);
-                _logger.LogError("Algo de errado aconteceu: ");
                 throw;
             }
         }

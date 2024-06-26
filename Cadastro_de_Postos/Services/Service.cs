@@ -14,28 +14,15 @@ namespace Cadastro_de_Postos.Services
             _logger = logger;
             _repository = repository;
         }
-        public async Task CreatePostos(PostosModel posto)
+        public async Task InserirPostoVacinacao(PostosModel posto)
         {
             try
             {
-                await _repository.CreatePostos(posto);
+                await _repository.InserirPostoVacinacao(posto);
             }
             catch (Exception ex)
             {
-
-                throw;
-            }
-        }
-
-        public async Task CreateVacinas(VacinasModel vacina)
-        {
-            try
-            {
-                await _repository.CreateVacinas(vacina);
-            }
-            catch (Exception ex)
-            {
-
+                _logger.LogError($"Erro ao inserir informações: {ex.Message}");
                 throw;
             }
         }
@@ -49,7 +36,7 @@ namespace Cadastro_de_Postos.Services
             }
             catch (Exception ex)
             {
-
+                _logger.LogError($"Erro ao deletar informações: {ex.Message}");
                 throw;
             }
         }
