@@ -1,11 +1,17 @@
 using Cadastro_de_Postos.Repositories;
 using Cadastro_de_Postos.Repositories.Interfaces;
+using Cadastro_de_Postos.Services;
+using Cadastro_de_Postos.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers();
-builder.Services.AddSingleton<IRepository, Repository>();
+
+builder.Services
+    .AddSingleton<IRepository, Repository>()
+    .AddSingleton<IService, Service>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

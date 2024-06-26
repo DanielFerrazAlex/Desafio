@@ -31,7 +31,7 @@ namespace Cadastro_de_Postos.Repositories
             }
         }
 
-        public async Task<int> CreatePostos(PostosModel posto)
+        public async Task CreatePostos(PostosModel posto)
         {
             try
             {
@@ -42,8 +42,7 @@ namespace Cadastro_de_Postos.Repositories
 
                 using (SqlConnection conn = new(Env.GetConnectionDataBase()))
                 {
-                    var result = await conn.ExecuteAsync(Script.CreatePosto, posto);
-                    return result;
+                    await conn.ExecuteAsync(Script.CreatePosto, posto);
                 }
             }
             catch (Exception ex)
@@ -53,7 +52,7 @@ namespace Cadastro_de_Postos.Repositories
             }
         }
 
-        public async Task<int> CreateVacinas(VacinasModel vacina)
+        public async Task CreateVacinas(VacinasModel vacina)
         {
             try
             {
@@ -69,8 +68,7 @@ namespace Cadastro_de_Postos.Repositories
 
                 using (SqlConnection conn = new(Env.GetConnectionDataBase()))
                 {
-                    var result = await conn.ExecuteAsync(Script.CreateVacinas, vacina);
-                    return result;
+                    await conn.ExecuteAsync(Script.CreateVacinas, vacina);
                 }
             }
             catch (Exception ex)

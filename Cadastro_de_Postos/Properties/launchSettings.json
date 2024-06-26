@@ -7,7 +7,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DATABASE_HOST": "34.151.238.152",
-        "DATABASE_NAME": "VacinationCenters",
+        "DATABASE_NAME": "adminogin",
         "DATABASE_USER": "sqlserver",
         "DATABASE_PASS": "Onaganet0"
 
