@@ -2,7 +2,8 @@
 {
     public class PostosModel
     {
-        public string? Nome_Posto { get; set; }
-        public VacinasModel? Vacinas { get; set; }
+        public int Id { get; set; }
+        public string? NomePosto { get; set; }
+        public VacinasModel Vacinas { get; set; }
     }
 }

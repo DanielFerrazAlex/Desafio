@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Cadastro_de_Postos")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fb54850508ddfe1a2caa158aadc430239b0af075")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+986298d94b00693e3791a0329f5c48020df9b336")]
 [assembly: System.Reflection.AssemblyProductAttribute("Cadastro_de_Postos")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Cadastro_de_Postos")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
