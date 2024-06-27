@@ -15,6 +15,23 @@ namespace Cadastro_de_Postos.Repositories
             _logger = logger;
         }
 
+        public async Task<List<PostosModel>> GetAllInformation()
+        {
+            try
+            {
+                using (SqlConnection conn = new(Env.GetConnectionDataBase()))
+                {
+                    var result = await conn.QueryAsync<PostosModel>(Script.GetAll);
+                    return result.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Erro ao retornar lista com todas informações: {ex.Message}");
+                throw;
+            }
+        }
+
         public async Task InserirPostoVacinacao(PostosModel posto)
         {
             try
@@ -26,7 +43,7 @@ namespace Cadastro_de_Postos.Repositories
                         _logger.LogInformation("A data de validade da vacina deve ser no futuro.");
                     }
 
-                    int countPosto = await conn.ExecuteScalarAsync<int>(Script.VerifyPosto, new { Nome_Posto = posto.NomePosto });
+                    int countPosto = await conn.ExecuteScalarAsync<int>(Script.VerifyPosto, new { NomePosto = posto.NomePosto });
 
                     if (countPosto > 0)
                     {
@@ -40,7 +57,7 @@ namespace Cadastro_de_Postos.Repositories
                         _logger.LogInformation("Não pode haver Lotes repetidos de vacina");
                     }
 
-                    int postoId = conn.QueryAsync<int>(Script.CreatePosto, posto).Result.Single();
+                    int postoId = conn.QueryAsync<int>(Script.CreatePosto, posto).Result.FirstOrDefault();
 
                     if (posto.Vacinas != null && posto.Vacinas.Any())
                     {

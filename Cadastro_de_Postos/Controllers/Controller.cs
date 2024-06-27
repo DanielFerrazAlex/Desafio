@@ -11,6 +11,21 @@ namespace Cadastro_de_Postos.Controllers
         {
             _service = service;
         }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetAllInformation()
+        {
+            try
+            {
+                return Ok(await _service.GetAllInformation());
+            }
+            catch (Exception ex)
+            {
+                BadRequest(ex.Message);
+                throw;
+            }
+        }
+
         [HttpPost("[action]")]
         public async Task<IActionResult> InserirPostoVacinacao([FromBody] PostosModel posto)
         {

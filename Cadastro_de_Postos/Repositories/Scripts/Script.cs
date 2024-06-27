@@ -1,7 +1,23 @@
 ﻿namespace Cadastro_de_Postos.Repositories.Scripts
 {
     public class Script
-    { 
+    {
+        internal static string GetAll =>
+            @"
+			 SELECT
+	            pv.NomePosto AS NomePosto,
+	            v.NomeVacina AS NomeVacina,
+                v.fabricante AS fabricante,
+                v.lote AS lote,
+                v.quantidade AS quantidade,
+                v.DataValidade AS data_validade
+            FROM 
+	            PostoDeVacinas pv
+            INNER JOIN PostoDeVacinas pvac ON pv.Id = pvac.Id
+            INNER JOIN Vacinas v ON pvac.Id = v.Id
+            WHERE 
+	            pv.Id = v.Id
+            ";
 
         internal static string VerifyLote =>
             @"
@@ -20,7 +36,7 @@
         internal static string VerifyPosto =>
             @"
             SELECT COUNT(*) FROM 
-                dbo.PostoDeVacina
+                dbo.PostoDeVacinas
             WHERE 
                 NomePosto = @NomePosto";
 
@@ -28,13 +44,13 @@
             @"
             DELETE
             FROM 
-                dbo.PostosDeVacina 
+                dbo.PostoDeVacinas
             WHERE 
                 Id = @Id";
 
         internal static string CreatePosto =>
             @"
-            INSERT INTO dbo.PostoDeVacina
+            INSERT INTO dbo.PostoDeVacinas
                 (NomePosto)
             VALUES 
                 (@NomePosto)

@@ -14,6 +14,20 @@ namespace Cadastro_de_Postos.Services
             _logger = logger;
             _repository = repository;
         }
+
+        public async Task<List<PostosModel>> GetAllInformation()
+        {
+            try
+            {
+                return await _repository.GetAllInformation();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Erro ao buscar informações: {ex.Message}");
+                throw;
+            }
+        }
+
         public async Task InserirPostoVacinacao(PostosModel posto)
         {
             try
